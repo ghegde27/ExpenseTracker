@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Glowing Hexagonal Shield Frame -->
+    <path
+        android:pathData="M54,23 C55.5,23 76.5,35 77.5,37 C78.5,39 78.5,63 77.5,65 C76.5,67 55.5,79 54,79 C52.5,79 31.5,67 30.5,65 C29.5,63 29.5,39 30.5,37 C31.5,35 52.5,23 54,23 Z"
+        android:strokeWidth="1.5">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="29"
+                android:startY="23"
+                android:endX="78"
+                android:endY="79"
+                android:type="linear">
+                <item android:color="#2600E676" android:offset="0.0" />
+                <item android:color="#2600B0FF" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:startX="29"
+                android:startY="23"
+                android:endX="78"
+                android:endY="79"
+                android:type="linear">
+                <item android:color="#FF00E676" android:offset="0.0" />
+                <item android:color="#FF00B0FF" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Dumbbell - Left Outer Plate -->
+    <path
+        android:pathData="M 33,45 L 37,45 C 38.1,45 39,45.9 39,47 L 39,61 C 39,62.1 38.1,63 37,63 L 33,63 C 31.9,63 31,62.1 31,61 L 31,47 C 31,45.9 31.9,45 33,45 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="31"
+                android:startY="45"
+                android:endX="39"
+                android:endY="63"
+                android:type="linear">
+                <item android:color="#FF00E676" android:offset="0.0" />
+                <item android:color="#FF00B0FF" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Dumbbell - Left Inner Plate -->
+    <path
+        android:pathData="M 41,41 L 45,41 C 46.1,41 47,41.9 47,43 L 47,65 C 47,66.1 46.1,67 45,67 L 41,67 C 39.9,67 39,66.1 39,65 L 39,43 C 39,41.9 39.9,41 41,41 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="39"
+                android:startY="41"
+                android:endX="47"
+                android:endY="67"
+                android:type="linear">
+                <item android:color="#FF00E676" android:offset="0.0" />
+                <item android:color="#FF00B0FF" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Dumbbell Bar -->
+    <path
+        android:pathData="M 37,52 L 71,52 C 72.1,52 73,52.9 73,54 C 73,55.1 72.1,56 71,56 L 37,56 C 35.9,56 35,55.1 35,54 C 35,52.9 35.9,52 37,52 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="35"
+                android:startY="52"
+                android:endX="73"
+                android:endY="56"
+                android:type="linear">
+                <item android:color="#FFE0E0E0" android:offset="0.0" />
+                <item android:color="#FFFFFFFF" android:offset="0.5" />
+                <item android:color="#FFB0BEC5" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Dumbbell - Right Inner Plate -->
+    <path
+        android:pathData="M 63,41 L 67,41 C 68.1,41 69,41.9 69,43 L 69,65 C 69,66.1 68.1,67 67,67 L 63,67 C 61.9,67 61,66.1 61,65 L 61,43 C 61,41.9 61.9,41 63,41 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="61"
+                android:startY="41"
+                android:endX="69"
+                android:endY="67"
+                android:type="linear">
+                <item android:color="#FF00E676" android:offset="0.0" />
+                <item android:color="#FF00B0FF" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Dumbbell - Right Outer Plate -->
+    <path
+        android:pathData="M 71,45 L 75,45 C 76.1,45 77,45.9 77,47 L 77,61 C 77,62.1 76.1,63 75,63 L 71,63 C 69.9,63 69,62.1 69,61 L 69,47 C 69,45.9 69.9,45 71,45 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="69"
+                android:startY="45"
+                android:endX="77"
+                android:endY="63"
+                android:type="linear">
+                <item android:color="#FF00E676" android:offset="0.0" />
+                <item android:color="#FF00B0FF" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Dynamic Growth Trend / Progress Arc -->
+    <path
+        android:pathData="M 26,71 L 38,59 L 48,64 L 74,32"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:startX="26"
+                android:startY="71"
+                android:endX="74"
+                android:endY="32"
+                android:type="linear">
+                <item android:color="#FFFFD600" android:offset="0.0" />
+                <item android:color="#FFFFAB00" android:offset="0.5" />
+                <item android:color="#FFFF6D00" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Arrowhead on Trend Arc -->
+    <path
+        android:pathData="M 64,32 L 75,31 L 73,42"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:startX="64"
+                android:startY="31"
+                android:endX="75"
+                android:endY="42"
+                android:type="linear">
+                <item android:color="#FFFFAB00" android:offset="0.0" />
+                <item android:color="#FFFF6D00" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+</vector>
