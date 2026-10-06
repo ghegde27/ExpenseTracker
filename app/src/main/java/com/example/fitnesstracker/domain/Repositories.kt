@@ -30,6 +30,54 @@ class FinanceRepository @Inject constructor(
     suspend fun addIncome(income: IncomeEntity): Long = incomeDao.insert(income)
     suspend fun addExpense(expense: ExpenseEntity): Long = expenseDao.insert(expense)
 
+    suspend fun insertExpenseIfNotDuplicate(
+        expense: ExpenseEntity,
+        timeWindowMs: Long = 10 * 60 * 1000L
+    ): Boolean {
+        val start = expense.expenseDate - timeWindowMs
+        val end = expense.expenseDate + timeWindowMs
+        val candidates = expenseDao.findInTimeRange(expense.amount, start, end)
+
+        val newSource = expense.source.trim().lowercase()
+        val newDesc = expense.description.trim().lowercase()
+
+        for (existing in candidates) {
+            val existingSource = existing.source.trim().lowercase()
+            val existingDesc = existing.description.trim().lowercase()
+
+            val sourceMatches = newSource.isNotBlank() && existingSource.isNotBlank() &&
+                    (newSource.contains(existingSource) || existingSource.contains(newSource))
+
+            val descMatches = newDesc.isNotBlank() && existingDesc.isNotBlank() &&
+                    (newDesc.contains(existingDesc) || existingDesc.contains(newDesc))
+
+            val oneIsGenericBank = isGenericBankOrWallet(existing.source) || isGenericBankOrWallet(existing.description)
+            val otherIsGenericBank = isGenericBankOrWallet(expense.source) || isGenericBankOrWallet(expense.description)
+
+            if (sourceMatches || descMatches || oneIsGenericBank || otherIsGenericBank) {
+                if (oneIsGenericBank && !otherIsGenericBank && expense.description.isNotBlank()) {
+                    expenseDao.insert(
+                        existing.copy(
+                            description = expense.description,
+                            source = expense.source.ifBlank { existing.source },
+                            updatedAt = System.currentTimeMillis()
+                        )
+                    )
+                }
+                return false
+            }
+        }
+
+        expenseDao.insert(expense)
+        return true
+    }
+
+    private fun isGenericBankOrWallet(str: String): Boolean {
+        val lower = str.lowercase()
+        return lower.contains("bank") || lower.contains("hdfc") || lower.contains("icici") ||
+                lower == "bank transaction" || lower == "bank sms" || lower == "manual"
+    }
+
     fun allIncome(): Flow<List<IncomeEntity>> = incomeDao.observeAll()
     fun totalIncome(): Flow<Long> = incomeDao.sumAll()
     fun incomeBetween(start: Long, end: Long): Flow<Long> = incomeDao.sumBetween(start, end)

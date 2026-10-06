@@ -62,20 +62,27 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.fitnesstracker.data.local.ClientEntity
 import com.example.fitnesstracker.data.local.IncomeEntity
 import com.example.fitnesstracker.data.local.PaymentMethod
+import com.example.fitnesstracker.voice.VoiceEntryButton
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @Composable
 fun IncomeScreen(
-    incomeViewModel: IncomeViewModel = hiltViewModel()
+    incomeViewModel: IncomeViewModel = hiltViewModel(),
+    expenseViewModel: ExpenseViewModel = hiltViewModel()
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var selectedMethodFilter by remember { mutableStateOf("All") }
 
     val dbIncomeList by incomeViewModel.incomeList.collectAsState()
-    val totalIncomeDb by incomeViewModel.totalIncome.collectAsState()
+    val totalIncomeRaw by incomeViewModel.totalIncome.collectAsState()
     val clientSearchResults by incomeViewModel.clientSearchResults.collectAsState()
+
+    val totalIncomeDb = remember(dbIncomeList, totalIncomeRaw) {
+        val calculatedSum = dbIncomeList.sumOf { it.amount }
+        if (calculatedSum > 0) calculatedSum else totalIncomeRaw
+    }
 
     val filteredList = remember(dbIncomeList, selectedMethodFilter) {
         if (selectedMethodFilter == "All") dbIncomeList
@@ -84,19 +91,34 @@ fun IncomeScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { showDialog = true },
-                containerColor = Color(0xFF00C853),
-                contentColor = Color.White,
-                shape = RoundedCornerShape(18.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                VoiceEntryButton(
+                    containerColor = Color(0xFF1E3C72),
+                    onConfirmExpense = { amount, category, description, source ->
+                        expenseViewModel.add(amount, category, description, source)
+                    },
+                    onConfirmIncome = { clientName, amount, method, notes ->
+                        incomeViewModel.add(null, clientName, amount, method, notes)
+                    }
+                )
+
+                FloatingActionButton(
+                    onClick = { showDialog = true },
+                    containerColor = Color(0xFF00C853),
+                    contentColor = Color.White,
+                    shape = RoundedCornerShape(18.dp)
                 ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = null)
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(text = "Add Income", fontWeight = FontWeight.Bold)
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(text = "Add Income", fontWeight = FontWeight.Bold)
+                    }
                 }
             }
         }

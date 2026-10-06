@@ -75,6 +75,9 @@ interface ExpenseDao {
     @Query("SELECT * FROM expenses WHERE expenseDate >= :start AND expenseDate <= :end ORDER BY expenseDate DESC")
     fun observeBetween(start: Long, end: Long): Flow<List<ExpenseEntity>>
 
+    @Query("SELECT * FROM expenses WHERE amount = :amount AND expenseDate >= :start AND expenseDate <= :end")
+    suspend fun findInTimeRange(amount: Long, start: Long, end: Long): List<ExpenseEntity>
+
     @Query("DELETE FROM expenses WHERE id = :id")
     suspend fun delete(id: Long)
 }

@@ -1,5 +1,6 @@
 package com.example.fitnesstracker.presentation
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fitnesstracker.data.local.ClientEntity
@@ -11,12 +12,14 @@ import com.example.fitnesstracker.domain.ClientRepository
 import com.example.fitnesstracker.domain.FinanceRepository
 import com.example.fitnesstracker.domain.todayRange
 import com.example.fitnesstracker.logging.AppLogger
+import com.example.fitnesstracker.sms.SmsScanner
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -272,6 +275,7 @@ class IncomeViewModel @Inject constructor(
 @HiltViewModel
 class ExpenseViewModel @Inject constructor(
     private val financeRepo: FinanceRepository,
+    private val smsScanner: SmsScanner,
     private val logger: AppLogger
 ) : ViewModel() {
 
@@ -290,6 +294,38 @@ class ExpenseViewModel @Inject constructor(
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = 0L
             )
+
+    private val _isScanningSms = MutableStateFlow(false)
+    val isScanningSms: StateFlow<Boolean> = _isScanningSms.asStateFlow()
+
+    private val _scanResultMessage = MutableStateFlow<String?>(null)
+    val scanResultMessage: StateFlow<String?> = _scanResultMessage.asStateFlow()
+
+    fun scanExistingSms(context: Context) {
+        if (_isScanningSms.value) return
+        logger.i("ExpenseVM", "Triggering historical SMS inbox scan")
+        viewModelScope.launch {
+            _isScanningSms.value = true
+            _scanResultMessage.value = null
+            try {
+                val result = smsScanner.scanInbox(context)
+                _scanResultMessage.value = when {
+                    result.errorMessage != null -> result.errorMessage
+                    result.addedCount > 0 -> "Found ${result.addedCount} new expenses from bank SMS!"
+                    else -> "No new bank SMS expenses detected in inbox."
+                }
+            } catch (e: Exception) {
+                logger.e("ExpenseVM", "Failed to scan SMS inbox", e)
+                _scanResultMessage.value = "Error scanning SMS: ${e.localizedMessage}"
+            } finally {
+                _isScanningSms.value = false
+            }
+        }
+    }
+
+    fun clearScanMessage() {
+        _scanResultMessage.value = null
+    }
 
     fun add(
         amount: Long,
